@@ -167,7 +167,9 @@ spec:
 
 kubectl apply -f ingress-rule.yaml
 
-
+Note: if error is there::
+  
+  kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 
 kubectl get services -n ingress-nginx
 
