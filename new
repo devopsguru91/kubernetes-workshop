@@ -1,0 +1,1553 @@
+
+ sudo docker exec -it a5d4e50f090a bash
+
+ cat /etc/os-release
+    
+  apt update
+  
+  apt install apache2
+  
+  service apache2 status
+  
+  service apache2 start
+  
+  service apache2 status
+  
+
+
+sudo docker ps -a
+   50  sudo docker commit a5d4e50f090a devopsguru91/ipwesepttest
+   51  sudo docker images
+   52  sudo docker stop a5d4e50f090a
+   53  sudo docker start a5d4e50f090a
+   54  sudo docker kill a5d4e50f090a
+   55  sudo docker ps -a
+   56  sudo docker start a5d4e50f090a
+   57  sudo docker ps -a
+   58  sudo docker kill a5d4e50f090a
+   59  sudo docker ps -a
+   60  sudo docker rm  a5d4e50f090a
+   61  sudo docker ps -a
+   62  clear
+   63  sudo docker ps -a
+   64  sudo docker container prune
+   65  clear
+   66  sudo docker images
+   67  sudo docker login
+
+
+Dockerfile
+
+FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get -y install apache2
+ADD ./index.html  /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+ENV name Devops Intellipaat
+
+
+
+<html>
+      <body> <h1> Hello from Docker </h1></body>
+</html>
+
+
+
+ 92  sudo docker build -t devopsguru91/devopsseptiptest:v1 .
+   93  sudo docker images
+   94  sudo docker run -itd -p 80:80 devopsguru91/devopsseptiptest:v1
+   95  sudo docker ps
+   96  sudo docker run -itd -p 443:80 devopsguru91/devopsseptiptest:v1
+   97  sudo docker ps
+
+
+
+
+https://github.com/cloudacademy/static-website-example
+
+git clone https://github.com/cloudacademy/static-website-example.git
+
+FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get -y install apache2
+COPY ./static-website-example  /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+ENV name Devops Intellipaat
+
+sudo docker build -t devopsguru91/devopsseptiptest:v2 .
+
+
+ sudo docker run -itd -p 443:80 devopsguru91/devopsseptiptest:v2
+ 
+ 
+ docker pull devopsguru91/devopsseptiptest:v2
+ 
+ 
+https://hub.docker.com/_/registry
+
+
+sudo docker run -d -p 5000:5000 --restart always --name registry registry:2
+
+
+========================================Maven===============================
+
+
+
+sudo apt get update
+
+sudo apt install openjdk-8-jdk -y
+
+java -version
+
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
+sudo apt install maven -y
+
+mvn -version
+
+https://github.com/devopsguru91/MavenCounterWebApp
+
+git clone https://github.com/devopsguru91/MavenCounterWebApp.git
+
+
+sudo apt install tree -y
+
+tree
+
+ mvn package
+
+tree
+
+mvn clean
+
+ mvn compile
+ 
+ ===========================================Jenkins===================
+ 
+ sudo apt get update
+
+sudo apt install openjdk-8-jdk -y
+ 
+ https://www.jenkins.io/doc/book/installing/linux/#debianubuntu
+ 
+ 
+ sudo apt install ca-certificates
+ 
+wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \
+    /etc/apt/sources.list.d/jenkins.list'
+sudo apt-get update
+sudo apt-get install jenkins
+
+
+
+sudo service jenkins status
+
+ sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+ 
+ 
+ 
+ https://drive.google.com/file/d/12PyqZ-xANbGC6M9_779esZgKM-rg2Qgy/view?usp=sharing
+ 
+ https://raw.githubusercontent.com/devopsguru91/pipeline-demo/master/Jenkinsfile
+ 
+ 
+ 
+ node() {
+   def mvnHome
+   stage('Preparation') { 
+      
+      git 'https://github.com/devopsguru91/simple-maven-project-with-tests'
+                
+      mvnHome = tool 'M3'
+   }
+   stage('Build') {
+      
+         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
+      
+   }
+   stage('Results') {
+      junit '**/target/surefire-reports/TEST-*.xml'
+      archive 'target/*.jar'
+   }
+}
+
+
+https://www.jenkins.io/doc/pipeline/tour/hello-world/
+
+==================================================================================
+============================Ansible===========================================
+
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu
+
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+
+
+Sample Inventory file:
+
+vi hosts
+
+
+controller ansible_host=127.0.0.1 ansible_connection=local
+
+[webserver]
+34.228.23.223 ansible_user=ubuntu
+
+
+[servers]
+127.0.0.1 ansible_connection=local
+34.228.23.223 ansible_user=ubuntu
+
+
+ansible -i hosts controller -m ping
+ansible -i hosts controller -m command -a "df -h"
+
+
+ssh-keygen -t rsa -b 4096 -C "Ansible-Controller"
+cat /home/ubuntu/.ssh/id_rsa.pub
+
+
+On Target Machine:
+
+vi .ssh/authorized_keys
+
+
+--------
+
+ansible -i hosts webserver -m ping
+
+ansible -i hosts servers -m ping
+
+-----------
+
+myplaybook.yaml
+
+---
+
+- hosts: host1
+  become: yes
+  name: Play 1
+  tasks:
+     - name: Execute command ‘Date’
+       command: date
+     - name: Execute script on server
+       script: test_script.sh
+
+
+- hosts: host2
+  name: Play 2
+  become: yes
+  tasks:
+     - name: Execute script on server
+       script: test_script.sh
+     - name: Install nginx
+       apt: name=nginx state=latest update_cache=yes
+
+---------------
+
+#!/bin/sh
+# This is comment
+
+echo "Hello World"
+
+
+--------------------------
+ansible-playbook -i hosts myplaybook.yaml -vv
+
+
+- hosts: webserver
+  name: Play 2
+  become: yes
+  tasks:
+     - name: Execute script on server
+       script: test_script.sh
+     - name: Stop Nginx Service
+       service: name=nginx state=stopped
+     - name: Install nginx
+       apt: name=nginx state=absent
+
+ansible-playbook -i hosts myplaybook.yaml -vv
+
+
+-----------------
+
+ansible-galaxy init myapache --offline
+
+
+
+
+---
+# tasks file for myapache
+
+include: install.yml
+include: configure.yml
+include: service.yml
+
+---
+
+- name: Install Apache Server
+  apt: name=apache2 state=present update_cache=yes
+
+------------------------
+---
+- name: Copy Custom Index File
+  copy: src=index.html dest=/var/www/html
+
+- name: Copy Custom Conf File
+  copy: src=apache2.conf dest=/etc/apache2
+  notify:
+     - Restart Apache Server
+
+---------------------
+---
+- name: Start Apache Server
+  service: name= apache2 state=started
+---------------------------------------
+
+index.html
+-------------------------------------------
+
+<html>
+        <body> <h1> Custom Welcome Page by Ansible</h1> </body>
+</html>
+
+-----------------------------------------------------
+apache2.conf
+
+# This is the main Apache server configuration file.  It contains the
+# configuration directives that give the server its instructions.
+# See http://httpd.apache.org/content/2.4/ for detailed information about
+# the directives and /usr/share/doc/apache2/README.Debian about Debian specific
+# hints.
+#
+#
+# Summary of how the Apache 2 configuration works in Debian:
+# The Apache 2 web server configuration in Debian is quite different to
+# upstream's suggested way to configure the web server. This is because Debian's
+# default Apache2 installation attempts to make adding and removing modules,
+# virtual hosts, and extra configuration directives as flexible as possible, in
+# order to make automating the changes and administering the server as easy as
+# possible.
+
+# It is split into several files forming the configuration hierarchy outlined
+# below, all located in the /etc/apache2/ directory:
+#
+#	/etc/apache2/
+#	|-- apache2.conf
+#	|	`--  ports.conf
+#	|-- mods-enabled
+#	|	|-- *.load
+#	|	`-- *.conf
+#	|-- conf-enabled
+#	|	`-- *.conf
+# 	`-- sites-enabled
+#	 	`-- *.conf
+#
+#
+# * apache2.conf is the main configuration file (this file). It puts the pieces
+#   together by including all remaining configuration files when starting up the
+#   web server.
+#
+# * ports.conf is always included from the main configuration file. It is
+#   supposed to determine listening ports for incoming connections which can be
+#   customized anytime.
+#
+# * Configuration files in the mods-enabled/, conf-enabled/ and sites-enabled/
+#   directories contain particular configuration snippets which manage modules,
+#   global configuration fragments, or virtual host configurations,
+#   respectively.
+#
+#   They are activated by symlinking available configuration files from their
+#   respective *-available/ counterparts. These should be managed by using our
+#   helpers a2enmod/a2dismod, a2ensite/a2dissite and a2enconf/a2disconf. See
+#   their respective man pages for detailed information.
+#
+# * The binary is called apache2. Due to the use of environment variables, in
+#   the default configuration, apache2 needs to be started/stopped with
+#   /etc/init.d/apache2 or apache2ctl. Calling /usr/bin/apache2 directly will not
+#   work with the default configuration.
+
+
+# Global configuration
+#
+
+#
+# ServerRoot: The top of the directory tree under which the server's
+# configuration, error, and log files are kept.
+#
+# NOTE!  If you intend to place this on an NFS (or otherwise network)
+# mounted filesystem then please read the Mutex documentation (available
+# at <URL:http://httpd.apache.org/content/2.4/mod/core.html#mutex>);
+# you will save yourself a lot of trouble.
+#
+# Do NOT add a slash at the end of the directory path.
+#
+#ServerRoot "/etc/apache2"
+
+#
+# The accept serialization lock file MUST BE STORED ON A LOCAL DISK.
+#
+Mutex file:${APACHE_LOCK_DIR} default
+
+#
+# PidFile: The file in which the server should record its process
+# identification number when it starts.
+# This needs to be set in /etc/apache2/envvars
+#
+PidFile ${APACHE_PID_FILE}
+
+#
+# Timeout: The number of seconds before receives and sends time out.
+#
+Timeout 300
+
+#
+# KeepAlive: Whether or not to allow persistent connections (more than
+# one request per connection). Set to "Off" to deactivate.
+#
+KeepAlive On
+
+#
+# MaxKeepAliveRequests: The maximum number of requests to allow
+# during a persistent connection. Set to 0 to allow an unlimited amount.
+# We recommend you leave this number high, for maximum performance.
+#
+MaxKeepAliveRequests 100
+
+#
+# KeepAliveTimeout: Number of seconds to wait for the next request from the
+# same client on the same connection.
+#
+KeepAliveTimeout 5
+
+
+# These need to be set in /etc/apache2/envvars
+User ${APACHE_RUN_USER}
+Group ${APACHE_RUN_GROUP}
+
+#
+# HostnameLookups: Log the names of clients or just their IP addresses
+# e.g., www.apache.org (on) or 204.62.129.132 (off).
+# The default is off because it'd be overall better for the net if people
+# had to knowingly turn this feature on, since enabling it means that
+# each client request will result in AT LEAST one lookup request to the
+# nameserver.
+#
+HostnameLookups Off
+
+# ErrorLog: The location of the error log file.
+# If you do not specify an ErrorLog directive within a <VirtualHost>
+# container, error messages relating to that virtual host will be
+# logged here.  If you *do* define an error logfile for a <VirtualHost>
+# container, that host's errors will be logged there and not here.
+#
+ErrorLog ${APACHE_LOG_DIR}/error.log
+
+#
+# LogLevel: Control the severity of messages logged to the error_log.
+# Available values: trace8, ..., trace1, debug, info, notice, warn,
+# error, crit, alert, emerg.
+# It is also possible to configure the log level for particular modules, e.g.
+# "LogLevel info ssl:warn"
+#
+LogLevel warn
+
+# Include module configuration:
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+
+# Include list of ports to listen on
+Include ports.conf
+
+
+# Sets the default security model of the Apache2 HTTPD server. It does
+# not allow access to the root filesystem outside of /usr/share and /var/www.
+# The former is used by web applications packaged in Debian,
+# the latter may be used for local directories served by the web server. If
+# your system is serving content from a sub-directory in /srv you must allow
+# access here, or in any related virtual host.
+<Directory />
+	Options FollowSymLinks
+	AllowOverride None
+	Require all denied
+</Directory>
+
+<Directory /usr/share>
+	AllowOverride None
+	Require all granted
+</Directory>
+
+<Directory /var/www/>
+	Options Indexes FollowSymLinks
+	AllowOverride None
+	Require all granted
+</Directory>
+
+#<Directory /srv/>
+#	Options Indexes FollowSymLinks
+#	AllowOverride None
+#	Require all granted
+#</Directory>
+
+
+
+
+# AccessFileName: The name of the file to look for in each directory
+# for additional configuration directives.  See also the AllowOverride
+# directive.
+#
+AccessFileName .htaccess
+
+#
+# The following lines prevent .htaccess and .htpasswd files from being
+# viewed by Web clients.
+#
+<FilesMatch "^\.ht">
+	Require all denied
+</FilesMatch>
+
+
+#
+# The following directives define some format nicknames for use with
+# a CustomLog directive.
+#
+# These deviate from the Common Log Format definitions in that they use %O
+# (the actual bytes sent including headers) instead of %b (the size of the
+# requested file), because the latter makes it impossible to detect partial
+# requests.
+#
+# Note that the use of %{X-Forwarded-For}i instead of %h is not recommended.
+# Use mod_remoteip instead.
+#
+LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %O" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+
+# Include of directories ignores editors' and dpkg's backup files,
+# see README.Debian for details.
+
+# Include generic snippets of statements
+IncludeOptional conf-enabled/*.conf
+
+# Include the virtual host configurations:
+IncludeOptional sites-enabled/*.conf
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
+
+
+
+------------------------------------------------------------------
+
+
+
+Handler:
+
+
+---
+# handlers file for myapache
+- name: Restart Apache Server
+  service: name=apache2 state=restarted
+
+=========================Kubernetes============================
+==================================================================
+On Master and Worker::::
+
+sudo apt update
+
+sudo apt install docker.io
+
+sudo systemctl enable docker 
+sudo systemctl start docker 
+sudo systemctl status docker 
+
+
+
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+
+
+
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+
+
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+
+List all available versions:::
+
+sudo apt-cache madison kubeadm
+
+switch to root user:
+
+sudo -i
+
+
+apt-get install -y kubelet=1.19.16-00 kubeadm=1.19.16-00 kubectl=1.19.16-00
+
+apt-mark hold kubeadm
+
+On Master Machine:::::::-----------------------------------------
+
+
+kubeadm init --apiserver-advertise-address=172.31.18.74 --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=NumCPU
+
+
+
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+  
+  exit
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  
+  
+  ----
+  
+  kubectl get nodes
+  
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+  ===================
+  
+  curl https://docs.projectcalico.org/manifests/calico.yaml -O
+  
+  kubectl apply -f calico.yaml
+  
+  or
+  
+  kubectl apply -f  https://docs.projectcalico.org/manifests/calico.yaml
+
+  kubectl get nodes
+
+  kubectl get all -n kube-system
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 172.31.18.74:6443 --token 7gqvrv.mt6oqnug6l250xt2 \
+    --discovery-token-ca-cert-hash sha256:4e30bc56cf35de3448b0aa9a8b79a66e6d6160e444107687e1602ceb977732ae
+
+
+ kubectl get nodes
+ 
+ kubectl get nodes -o wide
+ 
+ 
+ kubectl create deployment nginx --image=nginx:1.7.9 --replicas=3
+ 
+ kubectl get deployments
+ 
+ kubectl describe deployment nginx
+ 
+ kubectl get replicasets
+ 
+ kubectl get pods
+ kubectl get pods -o wide
+ kubectl describe pod nginx-746fbb99df-2wtgn
+ kubectl exec -it  nginx-746fbb99df-2wtgn bash
+ 
+ kubectl delete pod nginx-746fbb99df-2wtgn
+ 
+ kubectl delete deployment nginx
+ 
+ ------------------
+ Manifest File::: .yaml .yml
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx-deployment
+    labels:
+        app: nginx
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: nginx
+    template:
+        metadata:
+            labels:
+                app: nginx
+        spec:
+         containers:
+          - name: nginx
+            image: nginx:1.7.9
+            ports:
+               - containerPort: 80
+ 
+ 
+ 
+ kubectl apply -f nginx-dep.yaml
+ 
+ kubectl get deployment
+ 
+ kubectl get rs
+ 
+ kubectl get po
+ 
+
+ kubectl scale deployment nginx-deployment --replicas=5
+ 
+ ----------------
+ 
+ 
+ kubectl create service nodeport nginx --tcp=80:80
+ 
+ kubectl get services
+ 
+ curl cluster_IP_of_service
+ 
+ 
+ 
+ 
+ ----------------------
+ 
+ 
+ apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    run: nginx-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+    protocol: TCP
+  selector:
+    app: nginx
+---------------------
+
+kubectl apply -f nginx-service-nodeport.yaml
+kubectl get svc
+----------------------------------------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: apache-deployment
+    labels:
+        app: apache
+spec:
+    replicas: 3
+    selector:
+        matchLabels:
+            app: apache
+    template:
+        metadata:
+            labels:
+                app: apache
+        spec:
+         containers:
+          - name: apache
+            image: httpd:latest
+            ports:
+               - containerPort: 80
+-----------------------------
+
+kubectl apply -f apache-dep.yaml
+
+kubectl get po
+
+
+------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-service
+  labels:
+    run: apache-service
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30081
+    protocol: TCP
+  selector:
+    app: apache
+---------------------------------
+
+kubectl apply -f apache-service-nodeport.yaml
+
+kubectl get svc 
+
+curl cluster_IP_of_apache_service
+
+------------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  labels:
+    run: nginx-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+------------------------
+
+
+kubectl apply -f apache-service-clusterip.yaml -f nginx-service-clusterip.yaml
+
+-------------
+
+https://kubernetes.github.io/ingress-nginx/deploy/
+
+
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/baremetal/deploy.yaml --validate=false
+
+kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/baremetal/deploy.yaml 
+
+
+
+kubectl get svc -n ingress-nginx
+
+
+
+---------------------
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+        name: simple-webserver-routing-example
+        annotations:
+                nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+     - http:
+        paths:
+          - path: /server1
+            backend:
+                serviceName: nginx-service
+                servicePort: 80
+
+          - path: /server2
+            backend:
+                serviceName: apache-service
+                servicePort: 80
+
+------------------------
+kubectl apply -f ingress.yaml
+
+kubectl delete -f ingress.yaml
+
+kubectl get ingresses
+
+Ingress Controller Older Version:::
+
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.40.2/deploy/static/provider/baremetal/deploy.yaml
+
+ kubectl get svc -n ingress-nginx
+
+kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
+
+kubectl apply -f ingress.yaml
+
+NAME                               CLASS    HOSTS   ADDRESS        PORTS   AGE
+simple-webserver-routing-example   <none>   *       172.31.19.16   80      41s
+
+for ex:
+
+http://107.22.4.243:32320/server1
+http://107.22.4.243:32320/server2
+
+Kubernetes Dashboard::=============================
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.3/aio/deploy/recommended.yaml
+ 
+ 
+ kubectl get svc -n kubernetes-dashboard
+ 
+ kubectl edit svc kubernetes-dashboard -n kubernetes-dashboard
+ 
+ 
+kubectl get services -n kubernetes-dashboard
+
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+  
+ kubectl apply -f sa.yaml
+ 
+  
+  
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+ 
+ 
+ kubectl apply -f crb.yaml
+
+
+
+
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+
+
+
+----------------------
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sharevol
+spec:
+  containers:
+  - name: c1
+    image: centos:7
+    command:
+      - "bin/bash"
+      - "-c"
+      - "sleep 10000"
+    volumeMounts:
+      - name: xchange
+        mountPath: "/tmp/xchange"
+  - name: c2
+    image: centos:7
+    command:
+      - "bin/bash"
+      - "-c"
+      - "sleep 10000"
+    volumeMounts:
+      - name: xchange
+        mountPath: "/tmp/data"
+  volumes:
+  - name: xchange
+    emptyDir: {}
+    
+    
+====================Persistent-Storage=================
+
+
+https://github.com/kubernetes-retired/external-storage
+
+
+ git clone https://github.com/kubernetes-retired/external-storage.git
+ 
+ cd external-storage/aws/efs/deploy
+ 
+ 
+ kubectl apply -f rbac.yaml
+ 
+cd
+
+vi my-efs.yaml
+
+---------------
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: efs-provisioner
+data:
+  file.system.id: fs-e4413b65
+  aws.region: us-east-1
+  provisioner.name: example.com/aws-efs
+  dns.name: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: efs-provisioner
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: efs-provisioner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: efs-provisioner
+
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      labels:
+        app: efs-provisioner
+    spec:
+      serviceAccount: efs-provisioner
+      containers:
+        - name: efs-provisioner
+          image: quay.io/external_storage/efs-provisioner:latest
+          env:
+            - name: FILE_SYSTEM_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: file.system.id
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: aws.region
+            - name: DNS_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: dns.name
+                  optional: true
+            - name: PROVISIONER_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: efs-provisioner
+                  key: provisioner.name
+          volumeMounts:
+            - name: pv-volume
+              mountPath: /persistentvolumes
+      volumes:
+        - name: pv-volume
+          nfs:
+            server: fs-e4413b65.efs.us-east-1.amazonaws.com
+            path: /
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: aws-efs
+provisioner: example.com/aws-efs
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: efs
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "aws-efs"
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
+---
+-----------------------------------------
+ 
+ kubectl apply -f my-efs.yaml
+ 
+ kubectl get sc
+ 
+ kubectl get pvc
+
+vi pv-ex-dep.yaml
+----------------
+ apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: pv-deploy
+spec:
+   replicas: 1
+   selector:
+       matchLabels:
+           app: mypv
+   template:
+       metadata:
+           labels:
+             app: mypv
+       spec:
+         containers:
+            - name: shell
+              image: centos:7
+              command:
+              - "bin/bash"
+              - "-c"
+              - "sleep 10000"
+              volumeMounts:
+              - name: mypd
+                mountPath: "/tmp/persistent"
+         volumes:
+         - name: mypd
+           persistentVolumeClaim:
+                   claimName: efs
+
+
+---------------------------------------
+
+ echo -n "ABP&%$#DF9533" > apikey.txt
+ 
+ kubectl create secret generic apikey --from-file=./apikey.txt
+ 
+ 
+ 
+ vi secret-ex-pod.yaml
+ 
+ kubectl get secrets
+ 
+ kubectl describe secrets apikey
+ 
+ ------------------
+  apiVersion: v1
+kind: Pod
+metadata:
+  name: consumesec
+spec:
+  containers:
+  - name: shell
+    image: centos:7
+    command:
+      - "bin/bash"
+      - "-c"
+      - "sleep 10000"
+    volumeMounts:
+      - name: apikeyvol
+        mountPath: "/tmp/apikey"
+        readOnly: true
+  volumes:
+  - name: apikeyvol
+    secret:
+      secretName: apikey
+--------------------------------
+
+ kubectl apply -f secret-ex-pod.yaml
+ 
+ kubectl get pods
+ 
+  kubectl exec -it consumesec bash
+  
+  cat /tmp/apikey/apikey.txt
+  
+  
+  ------------------------------------------
+  
+  
+  kubectl get nodes
+  
+  kubectl taint nodes ip-172-31-19-16 key=value:NoSchedule
+  
+  
+  
+  -------------------
+  
+  apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    env: test
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  tolerations:
+  - key: "example-key"
+    operator: "Exists"
+    effect: "NoSchedule"
+--------------------------
+   kubectl apply -f taints-ex-pod.yaml
+   
+   kubectl get pods
+  
+   kubectl describe pod nginx
+   
+   
+   ==============Monitoring==============
+   
+   kubectl create namespace  monitoring
+
+
+--------------------------------------------------------
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: monitoring
+---------------------------------------------------------------------
+
+kubectl apply -f clusterRole.yaml
+
+--------------------------
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server-conf
+  labels:
+    name: prometheus-server-conf
+  namespace: monitoring
+data:
+  prometheus.rules: |-
+    groups:
+    - name: devopscube demo alert
+      rules:
+      - alert: High Pod Memory
+        expr: sum(container_memory_usage_bytes) > 1
+        for: 1m
+        labels:
+          severity: slack
+        annotations:
+          summary: High Memory Usage
+  prometheus.yml: |-
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+    rule_files:
+      - /etc/prometheus/prometheus.rules
+    alerting:
+      alertmanagers:
+      - scheme: http
+        static_configs:
+        - targets:
+          - "alertmanager.monitoring.svc:9093"
+
+    scrape_configs:
+      - job_name: 'kubernetes-apiservers'
+
+        kubernetes_sd_configs:
+        - role: endpoints
+        scheme: https
+
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: default;kubernetes;https
+
+      - job_name: 'kubernetes-nodes'
+
+        scheme: https
+
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+        kubernetes_sd_configs:
+        - role: node
+
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/${1}/proxy/metrics
+
+      
+      - job_name: 'kubernetes-pods'
+
+        kubernetes_sd_configs:
+        - role: pod
+
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: kubernetes_pod_name
+      
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']
+
+      - job_name: 'kubernetes-cadvisor'
+
+        scheme: https
+
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+        kubernetes_sd_configs:
+        - role: node
+
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+      
+      - job_name: 'kubernetes-service-endpoints'
+
+        kubernetes_sd_configs:
+        - role: endpoints
+
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+          action: replace
+          target_label: __scheme__
+          regex: (https?)
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+          action: replace
+          target_label: __address__
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_service_name]
+          action: replace
+          target_label: kubernetes_name
+-------------------------------------------------------------
+
+kubectl apply -f config-map.yaml
+
+----------------------------------------------------
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-server
+  template:
+    metadata:
+      labels:
+        app: prometheus-server
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.12.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+
+        - name: prometheus-storage-volume
+          emptyDir: {}
+
+-------------------------------------------
+
+kubectl apply -f prometheus-deployment.yaml
+
+-------------------------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: monitoring
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9090'
+spec:
+  selector: 
+    app: prometheus-server
+  type: NodePort  
+  ports:
+    - port: 8080
+      targetPort: 9090 
+      nodePort: 30000
+
+
+--------------------------------------
+
+kubectl apply -f prometheus-service.yaml
+
+kubectl get deployments -n monitoring
+
+kubectl get svc -n monitoring
+
+kubectl get pods -n monitoring
+
+kubectl taint nodes ip-172-31-19-16 key=value:NoSchedule-
+
+---------------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  prometheus.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+               "access":"proxy",
+                "editable": true,
+                "name": "prometheus",
+                "orgId": 1,
+                "type": "prometheus",
+                "url": "http://prometheus-service.monitoring.svc:8080",
+                "version": 1
+            }
+        ]
+    }
+--------------------------
+kubectl apply -f grafana-datasource-config.yaml
+
+----------------------------------------------------------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      name: grafana
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - name: grafana
+          containerPort: 3000
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+          requests: 
+            memory: "1Gi"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: /var/lib/grafana
+            name: grafana-storage
+          - mountPath: /etc/grafana/provisioning/datasources
+            name: grafana-datasources
+            readOnly: false
+      volumes:
+        - name: grafana-storage
+          emptyDir: {}
+        - name: grafana-datasources
+          configMap:
+              defaultMode: 420
+              name: grafana-datasources
+
+-------------------------------------------------
+
+kubectl apply -f grafana-deployment.yaml
+
+--------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '3000'
+spec:
+  selector: 
+    app: grafana
+  type: NodePort  
+  ports:
+    - port: 3000
+      targetPort: 3000
+      nodePort: 32000
+
+-----------------------------
+kubectl apply -f grafana-service.yaml
+
