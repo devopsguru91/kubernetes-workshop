@@ -1,0 +1,891 @@
+DevOps====Generic
+
+1. AWS Free Tier Accounts
+
+aws.amazon.com/free
+
+(Activated)
+
+VMs (t2.micro)
+
+2. Ubuntu Based VMs (18/20)
+
+3. SSH Client 
+
+Windows: PowerShell(default) ---(Putty + PuttyGen) /MobaXTerm/GitBash/
+
+Linux/Mac : Terminal
+
+4. Suggested Reads:
+
+- Linux (file/users/process)
+
+- vi editor or nano editor basic operation
+
+- basic networking understanding
+
+- Servers understanding
+
+
+
+5. Free Accounts
+
+- github.com
+- hub.docker.com
+
+=====Tools====
+
+1. Foundation
+2. Version Control using Git/GitHub
+3. Containerization using Docker
+4. Container Orchestration using Kubernetes ( I & II)
+5. Build & CI/CD (Maven + Jenkins)
+6. IT Automation using Ansible
+7. Infrastructure as a code using Terraform
+8. Monitoring with ELK(ElasticSearch + Logstash + Kibana)
+ Assignment Session 
+
+============================================Git/GitHub=======================================================
+
+Powershell/Linux/Mac
+
+ ssh ubuntu@18.206.94.25 -i .\Downloads\DevOps-IP-271121.pem
+ 
+ if permission issue is there::
+ 
+ chmod 400 path_to_keyFile
+ 
+ 
+ ==========================
+ 
+ sudo apt update
+ 
+ sudo apt install git
+ 
+ git --version
+ 
+ mkdir myproject
+ 
+ git init
+ 
+ git status
+ 
+ git add main.java
+ 
+ git status
+ 
+ git add .
+ 
+ git status
+ 
+ git config --global user.name "Ashutosh"
+ 
+ git config --global user.name 
+ 
+ git config --global user.email "devopsguru91@gmail.com"
+ 
+ git config --global user.email 
+ 
+ 
+ git commit -m "Initial Commit"
+ 
+ git status
+ 
+ git log
+ 
+ 
+ ---------
+ AWS Account
+ 
+ Github.com
+ 
+ MobaXterm/Powershell
+ 
+ ------------------------
+ 
+git remote add origin git@github.com:devopsguru91/myproject.git
+
+
+ssh-keygen -t rsa -b 4096 -C "AWS Machine"
+
+
+ cat /home/ubuntu/.ssh/id_rsa.pub
+ 
+ git push origin master
+
+ 
+ git pull origin master
+ 
+ ---------------------------------
+ 
+ 
+ cd
+ 
+ git clone git@github.com:devopsguru91/DevOpsDemo2.git
+ 
+ 
+cd DevOpsDemo2
+
+git status
+
+git log
+
+
+git push origin master
+
+ 
+ git pull origin master
+
+
+git push origin master
+
+-----------------------
+
+
+git branch
+
+git branch develop
+
+git checkout develop
+
+git add .
+
+git commit -m "develop branch changes"
+
+git push origin master
+
+git checkout master
+
+git merge develop
+
+git push origin master
+
+git branch -d develop
+
+git branch
+
+git push origin --delete develop
+
+
+
+git checkout -b feature
+
+git add .
+
+git commit -m "feature"
+
+
+git checkout master
+
+git add .
+
+git commit -m "bugfix"
+
+
+
+git checkout feture
+
+git rebase master
+
+-----------------------------------------
+=================Docker==========================
+
+https://docs.microsoft.com/en-us/windows/wsl/install
+
+
+https://docs.docker.com/engine/install/ubuntu/
+
+--------------------------------------------
+sudo apt-get update
+
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+    
+ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+ 
+ 
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  
+  
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo systemctl status docker
+q
+
+-------------------------------------
+or 
+
+sudo apt install docker.io
+
+-----------------------------------------------------------
+ sudo docker run hello-world
+ sudo docker ps
+ sudo docker ps -a
+ 
+ sudo docker run --name mycontainer hello-world
+ 
+ sudo docker ps -a
+ 
+ sudo docker pull ubuntu:20.04
+ 
+ sudo docker run ubuntu:20.04
+ 
+ 
+sudo docker run -it centos:7
+
+cat /etc/system-release
+
+sudo docker run -itd ubuntu
+
+sudo docker ps
+
+sudo docker stats
+
+sudo docker exec -it 62d73411a3f8 ls
+
+ sudo docker exec -it 62d73411a3f8 bash
+ 
+ apt update
+ 
+ apt install apache2 -y
+
+
+service apache2 status
+
+service apache2 start
+
+service apache2 status
+
+
+sudo docker commit 62d73411a3f8 devopsguru91/test-image-0512:v1
+
+ sudo docker images
+ 
+ sudo docker stop 62d73411a3f8
+ 
+ sudo docker ps -a
+ 
+ sudo docker start 62d73411a3f8
+ 
+ 
+ sudo docker kill 62d73411a3f8
+ 
+  sudo docker start 62d73411a3f8
+  
+   sudo docker stop 62d73411a3f8
+ 
+  sudo docker rm 62d73411a3f8
+  
+  sudo docker container prune
+  
+  sudo docker rmi eeb6ee3f44bd feb5d9fea6a5 ubuntu:latest
+  
+  sudo docker login
+  
+  sudo docker push devopsguru91/test-image-0512:v1
+   
+   
+ sudo docker tag <oldname> <new_name>
+ 
+ sudo docker run -d -p 5000:5000 --restart always --name registry registry:2
+ 
+  sudo docker pull devopsguru91/test-image-0512:v1
+ 
+ sudo docker tag devopsguru91/test-image-0512:v1 localhost:5000/test-image-0512:v1
+ 
+ sudo docker push localhost:5000/test-image-0512:v1
+ 
+ sudo docker rmi devopsguru91/test-image-0512:v1
+ 
+ sudo docker rmi localhost:5000/test-image-0512:v1
+ 
+ 
+ sudo docker pull localhost:5000/test-image-0512:v1
+ 
+ sudo docker images
+ 
+vi Dockerfile
+
+
+FROM ubuntu:16.04
+RUN apt-get update
+RUN apt-get -y install apache2
+ADD ./index.html  /var/www/html
+ENTRYPOINT apachectl -D FOREGROUND
+ENV name Devops Intellipaat
+
+
+vi index.html
+
+
+<html>
+      <body>
+          <h1> Hello from docker container </h1>
+      </body>
+</html>
+
+ 
+ 
+ sudo docker build -t devopsguru91/custom-image-0512:1.0 .
+ 
+
+ 
+ sudo docker run -itd -p 80:80 devopsguru91/custom-image-0512:1.0
+
+
+sudo docker ps
+
+
+sudo docker run -itd -p 443:80 devopsguru91/custom-image-0512:1.0
+
+
+sudo docker ps
+
+-------------------------------Ansible-------------------
+
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu
+
+
+$ sudo apt update
+$ sudo apt install software-properties-common
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible
+$ sudo apt install ansible
+
+vi hosts
+
+[controller]
+127.0.0.1   ansible_connection=local
+
+
+ansible -i hosts controller -m ping
+--------------------------------------------------
+[controller]
+127.0.0.1   ansible_connection=local
+
+[webserver]
+3.88.43.127 ansible_user=ubuntu
+----------------------------------------------------
+
+ssh-keygen -t rsa -b 4096 -C "Ansible-Controller"
+
+
+cat /home/ubuntu/.ssh/id_rsa.pub
+
+----copy content
+
+
+on target machine:::
+
+
+vi .ssh/authorized_keys
+
+
+on controller:
+
+ssh <target_machine_ip>
+
+
+yes
+
+exit
+
+------------------
+
+ansible -i hosts webserver -m ping
+
+
+-------------------------------------
+
+vi first_playbook.yaml
+
+---
+
+- hosts: controller
+  become: yes
+  name: Play 1
+  tasks:
+     - name: Execute command 'Date'
+       command: date
+     - name: Execute script on server
+       script: test_script.sh
+
+
+- hosts: webserver
+  name: Play 2
+  become: yes
+  tasks:
+     - name: Execute script on server
+       script: test_script.sh
+     - name: Install nginx
+       apt: name=nginx state=latest update_cache=yes
+
+------------------------------------------------------
+
+vi test_script.sh
+
+#!/bin/bash
+
+echo "hello"
+
+----------------------------
+ansible-playbook -i hosts first_playbook.yaml
+
+
+ansible-playbook -i hosts first_playbook.yaml -vv
+
+-------------------------------------
+
+---
+
+- hosts: webserver
+  name: Play 2
+  become: yes
+  tasks:
+     - name: stop nginx service
+       service: name=nginx state=stopped
+     - name: uninstall nginx
+       apt: name=nginx state=absent
+
+
+----------------------
+
+ansible-playbook -i hosts 2nd_playbook.yaml
+
+
+ansible-galaxy init apache --offline
+
+sudo apt install tree
+
+tree apache/
+
+
+vi apache/meta/main.yml
+
+vi apache/tasks/main.yml
+
+---
+# tasks file for apache
+- include: install.yaml
+- include: configure.yaml
+- include: service.yaml
+
+vi apache/tasks/install.yaml
+
+---
+
+- name: Install Apache Web Server
+  apt: name=apache2 state=present update_cache=yes
+
+
+vi apache/tasks/configure.yaml
+
+---
+- name: Use Custom Apache welcome page
+  copy: src=index.html dst=/var/www/html/
+
+- name: Use Custom Configuration File
+  copy: src=apache2.conf dst=/etc/apache2/
+  notify:
+       - Restart Apache Server
+
+
+vi apache/handlers/main.yml
+
+---
+# handlers file for apache
+- name: Restart Apache Server
+  service: name=apache2 state=restarted
+
+
+vi apache/tasks/service.yaml
+
+---
+- name: Start Apache Web Server
+  service: name=apache2 state=started
+
+
+-----------------------------------
+
+vi apache/files/index.html
+
+<html>
+      <body>
+          <h1> Hello from Ansible </h1>
+      </body>
+</html>
+
+
+vi apache/files/apache2.conf
+
+# This is the main Apache server configuration file.  It contains the
+# configuration directives that give the server its instructions.
+# See http://httpd.apache.org/content/2.4/ for detailed information about
+# the directives and /usr/share/doc/apache2/README.Debian about Debian specific
+# hints.
+#
+#
+# Summary of how the Apache 2 configuration works in Debian:
+# The Apache 2 web server configuration in Debian is quite different to
+# upstream's suggested way to configure the web server. This is because Debian's
+# default Apache2 installation attempts to make adding and removing modules,
+# virtual hosts, and extra configuration directives as flexible as possible, in
+# order to make automating the changes and administering the server as easy as
+# possible.
+
+# It is split into several files forming the configuration hierarchy outlined
+# below, all located in the /etc/apache2/ directory:
+#
+#       /etc/apache2/
+#       |-- apache2.conf
+#       |       `--  ports.conf
+#       |-- mods-enabled
+#       |       |-- *.load
+#       |       `-- *.conf
+#       |-- conf-enabled
+#       |       `-- *.conf
+#       `-- sites-enabled
+#               `-- *.conf
+#
+#
+# * apache2.conf is the main configuration file (this file). It puts the pieces
+#   together by including all remaining configuration files when starting up the
+#   web server.
+#
+# * ports.conf is always included from the main configuration file. It is
+#   supposed to determine listening ports for incoming connections which can be
+#   customized anytime.
+#
+# * Configuration files in the mods-enabled/, conf-enabled/ and sites-enabled/
+#   directories contain particular configuration snippets which manage modules,
+#   global configuration fragments, or virtual host configurations,
+#   respectively.
+#
+#   They are activated by symlinking available configuration files from their
+#   respective *-available/ counterparts. These should be managed by using our
+#   helpers a2enmod/a2dismod, a2ensite/a2dissite and a2enconf/a2disconf. See
+#   their respective man pages for detailed information.
+#
+# * The binary is called apache2. Due to the use of environment variables, in
+#   the default configuration, apache2 needs to be started/stopped with
+#   /etc/init.d/apache2 or apache2ctl. Calling /usr/bin/apache2 directly will not
+#   work with the default configuration.
+
+
+# Global configuration
+#
+
+#
+# ServerRoot: The top of the directory tree under which the server's
+# configuration, error, and log files are kept.
+#
+# NOTE!  If you intend to place this on an NFS (or otherwise network)
+# mounted filesystem then please read the Mutex documentation (available
+# at <URL:http://httpd.apache.org/content/2.4/mod/core.html#mutex>);
+# you will save yourself a lot of trouble.
+#
+# Do NOT add a slash at the end of the directory path.
+#
+#ServerRoot "/etc/apache2"
+
+#
+# The accept serialization lock file MUST BE STORED ON A LOCAL DISK.
+#
+Mutex file:${APACHE_LOCK_DIR} default
+
+#
+# PidFile: The file in which the server should record its process
+# identification number when it starts.
+# This needs to be set in /etc/apache2/envvars
+#
+PidFile ${APACHE_PID_FILE}
+
+#
+# Timeout: The number of seconds before receives and sends time out.
+#
+Timeout 310
+
+#
+# KeepAlive: Whether or not to allow persistent connections (more than
+# one request per connection). Set to "Off" to deactivate.
+#
+KeepAlive On
+
+#
+# MaxKeepAliveRequests: The maximum number of requests to allow
+# during a persistent connection. Set to 0 to allow an unlimited amount.
+# We recommend you leave this number high, for maximum performance.
+#
+MaxKeepAliveRequests 101
+
+#
+# KeepAliveTimeout: Number of seconds to wait for the next request from the
+# same client on the same connection.
+#
+KeepAliveTimeout 10
+
+
+# These need to be set in /etc/apache2/envvars
+User ${APACHE_RUN_USER}
+Group ${APACHE_RUN_GROUP}
+
+#
+# HostnameLookups: Log the names of clients or just their IP addresses
+# e.g., www.apache.org (on) or 204.62.129.132 (off).
+# The default is off because it'd be overall better for the net if people
+# had to knowingly turn this feature on, since enabling it means that
+# each client request will result in AT LEAST one lookup request to the
+# nameserver.
+#
+HostnameLookups Off
+
+# ErrorLog: The location of the error log file.
+# If you do not specify an ErrorLog directive within a <VirtualHost>
+# container, error messages relating to that virtual host will be
+# logged here.  If you *do* define an error logfile for a <VirtualHost>
+# container, that host's errors will be logged there and not here.
+#
+ErrorLog ${APACHE_LOG_DIR}/error.log
+
+#
+# LogLevel: Control the severity of messages logged to the error_log.
+# Available values: trace8, ..., trace1, debug, info, notice, warn,
+# error, crit, alert, emerg.
+# It is also possible to configure the log level for particular modules, e.g.
+# "LogLevel info ssl:warn"
+#
+LogLevel warn
+
+# Include module configuration:
+IncludeOptional mods-enabled/*.load
+IncludeOptional mods-enabled/*.conf
+
+# Include list of ports to listen on
+Include ports.conf
+
+
+# Sets the default security model of the Apache2 HTTPD server. It does
+# not allow access to the root filesystem outside of /usr/share and /var/www.
+# The former is used by web applications packaged in Debian,
+# the latter may be used for local directories served by the web server. If
+# your system is serving content from a sub-directory in /srv you must allow
+# access here, or in any related virtual host.
+<Directory />
+        Options FollowSymLinks
+        AllowOverride None
+        Require all denied
+</Directory>
+
+<Directory /usr/share>
+        AllowOverride None
+        Require all granted
+</Directory>
+
+<Directory /var/www/>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+</Directory>
+
+#<Directory /srv/>
+#       Options Indexes FollowSymLinks
+#       AllowOverride None
+#       Require all granted
+#</Directory>
+
+
+
+
+# AccessFileName: The name of the file to look for in each directory
+# for additional configuration directives.  See also the AllowOverride
+# directive.
+#
+AccessFileName .htaccess
+
+#
+# The following lines prevent .htaccess and .htpasswd files from being
+# viewed by Web clients.
+#
+<FilesMatch "^\.ht">
+        Require all denied
+</FilesMatch>
+
+
+#
+# The following directives define some format nicknames for use with
+# a CustomLog directive.
+#
+# These deviate from the Common Log Format definitions in that they use %O
+# (the actual bytes sent including headers) instead of %b (the size of the
+# requested file), because the latter makes it impossible to detect partial
+# requests.
+#
+# Note that the use of %{X-Forwarded-For}i instead of %h is not recommended.
+# Use mod_remoteip instead.
+#
+LogFormat "%v:%p %h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" vhost_combined
+LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+LogFormat "%h %l %u %t \"%r\" %>s %O" common
+LogFormat "%{Referer}i -> %U" referer
+LogFormat "%{User-agent}i" agent
+
+# Include of directories ignores editors' and dpkg's backup files,
+# see README.Debian for details.
+
+# Include generic snippets of statements
+IncludeOptional conf-enabled/*.conf
+
+# Include the virtual host configurations:
+IncludeOptional sites-enabled/*.conf
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+---------------------------------------------------------------
+
+playbook::
+
+---
+
+- hosts: webserver
+  become: yes
+  roles:
+      - apache
+
+
+ansible-playbook -i hosts 3rd_playbook.yaml
+
+==========================================================
+
+on Master and Worker:::
+
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo systemctl status docker
+q
+
+-------------------------------------
+or 
+
+sudo apt install docker.io
+
+sudo systemctl status docker
+q
+
+------------------------------------------
+
+
+sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+
+
+sudo apt update
+
+apt list -a kubeadm
+
+sudo apt-get install -y kubelet=1.19.16-00 kubeadm=1.19.16-00 kubectl=1.19.16-00
+
+sudo apt-mark hold kubelet kubeadm kubectl
+
+sudo -i
+
+Only On Master:::
+
+kubeadm init --apiserver-advertise-address= <private_ip_address_of-master_node> --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=NumCPU
+
+----------------------------------------------------------------------
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+ kubectl get nodes
+
+
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+
+curl https://docs.projectcalico.org/manifests/calico.yaml -O
+
+ kubectl apply -f calico.yaml
+ 
+ or 
+ 
+ 
+kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+
+
+kubectl get nodes
+
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 172.31.82.81:6443 --token ta2z01.whgumchn499s0u2v \
+    --discovery-token-ca-cert-hash sha256:92ca5e3f387967589a8155f0b9d803f20fa624ae2fd5e3d2628e81aa803850ba
+    
+
+kubectl get nodes
+
+----------------------------------------------------------------------------------------
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+------------------------------------------
+ kubectl get pods -n kube-system
+ 
+  kubectl get pods -n kube-system -o wide
+ 
+  kubectl get pods
+  
+  kubectl apply -f nginx-deploy.yaml
+  
+   kubectl get deployments
+   
+   kubectl get replicasets
+   
+   kubectl get pods
+   
+   kubectl describe pod nginx-deployment-5d59d67564-29xh6
+   
+  kubectl exec -it nginx-deployment-5d59d67564-29xh6 bash
+
+
+kubectl scale deployment nginx-deployment --replicas=5
+
